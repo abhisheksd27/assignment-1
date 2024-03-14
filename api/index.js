@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGO).then(()=>{
 const app=express();
 
 app.use(express.json());
-//middleware for authentication
+
 
 app.listen(3000, ()=>{
     console.log('Server Listening on port 3000');
@@ -31,3 +31,15 @@ app.listen(3000, ()=>{
 
 app.use("/api/user",userRoutes);
 app.use("/api/auth",authRoutes)
+
+
+app.use((err,req,res,next)=>{
+    const statusCode = err.statusCode  || 500;
+    const Message = err.message||'Internal Server Error';
+    return res.status(statusCode).json({
+        success: false,
+        error:Message,
+        statusCode,
+
+    })
+})
